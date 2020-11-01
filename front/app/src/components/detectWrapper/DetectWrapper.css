@@ -1,0 +1,19 @@
+
+/* .DetectWrapper {
+    width: 50rem;
+    margin: 0 auto;
+} */
+
+
+.DetectWrapper {
+    width:800px;
+    background-color:#ccc;
+    border:10px solid #ddd;
+    margin:0 auto;
+}
+
+@media (max-width: 768px) {
+    .DetectWrapper {
+        width: 90%;    
+    }
+}

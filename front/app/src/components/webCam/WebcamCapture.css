@@ -1,0 +1,7 @@
+.WebcamCapture {
+    width: 400px;
+    height: 400px;
+    background-color:#ccc;
+   border:10px solid #ddd;
+   margin:0 auto;
+}
