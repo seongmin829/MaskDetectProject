@@ -57,8 +57,8 @@ const WebcamCapture = () => {
 
     const capture = React.useCallback(
         () => {
-            const imageSrc = webcamRef.current.getScreenshot();
-            //const imageSrc = webcamRef.current.getScreenshot({width: 1920, height: 1080});
+            //const imageSrc = webcamRef.current.getScreenshot();
+            const imageSrc = webcamRef.current.getScreenshot({width: 1920, height: 1080});
             console.log("haha");
 
             fetch("http://localhost:8000/", {
