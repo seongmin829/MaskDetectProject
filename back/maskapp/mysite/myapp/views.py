@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from rest_framework import status
 from rest_framework .decorators import api_view
 from rest_framework.response import Response
@@ -12,6 +11,8 @@ import cv2
 import numpy as np
 import base64
 import io
+#from sklearn.externals import joblib
+import joblib
 
 # Create your views here.
 
@@ -32,14 +33,37 @@ def get_hog(size):
     hog = cv2.HOGDescriptor(winSize,blockSize,blockStride,cellSize,nbins,derivAperture,winSigma,histogramNormType,L2HysThreshold,gammaCorrection,nlevels, signedGradients)
     return hog
 
-def accessControl(svm, size):
 
-
-def imageProcessing(img):
-    img = cv2.imread("input.jpg")
+def imageProcessing(size):
+    img = cv2.imread("input.jpg",)
     height, width, channel = img.shape
-    svm = joblib.load('lib/maskSVM-1.pkl')
-    return access_control(svm, 80)
+    svm = joblib.load('maskSVM-1.pkl')
+    hog = get_hog(size)
+
+    if width > height: radius = int(height * 21 / 100)
+    else : radius = int(width * 21 / 100)
+
+    side = int(radius*90/100)
+    centerX = int(width/2)
+    centerY = int(height/2)
+
+    trim_img = img[centerY-side:centerY+side, centerX-side:centerX+side]
+    trim_img_gray = cv2.cvtColor(trim_img, cv2.COLOR_BGR2GRAY)
+    face_cascade = cv2.CascadeClassifier('haarcascade_frontface.xml')
+    face_locations = face_cascade.detectMultiScale(trim_img_gray)
+
+    if len(face_locations) > 0:
+        return "red"
+    else:
+        trim_img = cv2.resize(trim_img, dsize=(size, size), interpolation=cv2.INTER_AREA)
+        hog_feature = hog.compute(trim_img)
+        hog_feature = np.array(hog_feature).flatten().tolist()
+        y_pred = svm.predict([hog_feature])
+        if y_pred[0] == 1:
+            return "blue"
+        else:
+            return "yellow"
+
 
 @csrf_exempt
 @api_view(['POST'])
@@ -55,8 +79,8 @@ def index(request):
     image = Image.open(io.BytesIO(imgdata))
     img = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
     cv2.imwrite("input.jpg", img)
-    a = "hello django"
-    return Response(a)
+    result = imageProcessing(80)
+    return Response(result)
 
 @csrf_exempt
 @api_view(['GET'])

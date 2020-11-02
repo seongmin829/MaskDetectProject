@@ -43,23 +43,29 @@ const WebcamCapture = () => {
             var pX = canvas.width / 2 - faceArea / 2;
             var pY = canvas.height / 2 - faceArea / 2;
 
-            ctx.rect(pX, pY, faceArea, faceArea);
+            //ctx.rect(pX, pY, faceArea, faceArea);
+            var radius = 0;
+            var centerX = canvas.width/2;
+            var centerY = canvas.height/2;
+            if (canvas.width > canvas.height){radius = canvas.height * 21 / 100}
+            else {radius = canvas.width * 21 / 100}
+            radius = radius*90/100;
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2)
             ctx.lineWidth = "3";
             //ctx.strokeStyle = "red";
             ctx.strokeStyle = color;
             ctx.stroke();
             //capture();
-            setTimeout(drawImge, 1000);
+            setTimeout(drawImge, 100);
         }
     }
-    setTimeout(drawImge, 1000);
+    setTimeout(drawImge, 100);
     //setColor("yellow");
 
     const capture = React.useCallback(
         () => {
             //const imageSrc = webcamRef.current.getScreenshot();
             const imageSrc = webcamRef.current.getScreenshot({width: 1920, height: 1080});
-            console.log("haha");
 
             fetch("http://localhost:8000/", {
                 method: "POST",
