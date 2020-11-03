@@ -13,16 +13,22 @@ const videoConstraints = {
 };
 
 const WebcamCapture = () => {
+    console.log("start");
     const webcamRef = React.useRef(null);
     const canvasRef = React.useRef(null);
 
-    const [color, setColor] = React.useState('');
+    // const [color, setColor] = React.useState('');
+    // const [check, setCheck] = React.useState(0);
+    const color = "yellow";
+    const check = 0;
 
-    //const axios = require('axios');
+    const onStart = () => {
+        //check = 1;
+    }
 
-    const onChangeColor = () => {
-        setColor('yellow');
-    };
+    const onStop = () => {
+        //check = 0;
+    } 
 
     function drawImge() {
         const video = webcamRef.current;
@@ -39,11 +45,12 @@ const WebcamCapture = () => {
             ctx.drawImage(video.video, 0, 0, canvas.width, canvas.height);
             ctx.scale(-1, 1);
             ctx.translate(-canvas.width, 0);
-            var faceArea = 300;
-            var pX = canvas.width / 2 - faceArea / 2;
-            var pY = canvas.height / 2 - faceArea / 2;
 
+            // var faceArea = 300;
+            // var pX = canvas.width / 2 - faceArea / 2;
+            // var pY = canvas.height / 2 - faceArea / 2;
             //ctx.rect(pX, pY, faceArea, faceArea);
+            
             var radius = 0;
             var centerX = canvas.width/2;
             var centerY = canvas.height/2;
@@ -52,7 +59,6 @@ const WebcamCapture = () => {
             radius = radius*90/100;
             ctx.arc(centerX, centerY, radius, 0, Math.PI * 2)
             ctx.lineWidth = "3";
-            //ctx.strokeStyle = "red";
             ctx.strokeStyle = color;
             ctx.stroke();
             //capture();
@@ -60,7 +66,15 @@ const WebcamCapture = () => {
         }
     }
     setTimeout(drawImge, 100);
-    //setColor("yellow");
+
+
+    // function videoCapture(){
+    //     if(check == 1){capture();}
+    //     else console.log("out")
+    //     console.log(check);
+    //     setTimeout(videoCapture, 3000);
+    // }
+    // setTimeout(videoCapture, 3000);
 
     const capture = React.useCallback(
         () => {
@@ -77,11 +91,6 @@ const WebcamCapture = () => {
                 .then((response) => {
                     console.log(response);
                 });
-
-
-
-
-            //setColor('yellow');
         },
         [webcamRef]
     );
@@ -100,7 +109,8 @@ const WebcamCapture = () => {
             //videoConstraints={videoConstraints}
             />
             <canvas ref={canvasRef} style={{ width: 200, height: 150 }} />
-            <button onClick={capture}>Capture photo</button>
+            <button onClick={capture}>start</button>
+            <button onClick={onStop}>stop</button>
         </div>
     );
 };

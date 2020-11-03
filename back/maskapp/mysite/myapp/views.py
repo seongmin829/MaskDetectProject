@@ -52,6 +52,8 @@ def imageProcessing(size):
     face_cascade = cv2.CascadeClassifier('haarcascade_frontface.xml')
     face_locations = face_cascade.detectMultiScale(trim_img_gray)
 
+    cv2.imwrite("trim_img.jpg", trim_img)
+
     if len(face_locations) > 0:
         return "red"
     else:
